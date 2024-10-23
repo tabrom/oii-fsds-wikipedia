@@ -102,7 +102,9 @@ def main(data_dir: Path, output_dir: Path, batch_size: int = 1000, include_text:
     Creates one feather file per article.
     """
     data_dir = Path(data_dir)
+    print(data_dir)
     output_dir = Path(output_dir)
+    print(data_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
     
     print(f"Processing with {'text content' if include_text else 'text length only'}")
@@ -115,7 +117,7 @@ def main(data_dir: Path, output_dir: Path, batch_size: int = 1000, include_text:
         
         if df is not None:
             output_path = output_dir / f"{article_dir.name}.feather"
-            df.to_feather(output_path)
+            df.reset_index().to_feather(output_path)
             print_summary(df, article_dir.name, include_text)
 
 if __name__ == "__main__":
