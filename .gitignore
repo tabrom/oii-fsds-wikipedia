@@ -7,6 +7,8 @@ uv.lock
 data/*
 !data/.gitkeep
 
+DataFrames/*
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

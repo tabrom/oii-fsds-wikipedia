@@ -102,9 +102,7 @@ def main(data_dir: Path, output_dir: Path, batch_size: int = 1000, include_text:
     Creates one feather file per article.
     """
     data_dir = Path(data_dir)
-    print(data_dir)
     output_dir = Path(output_dir)
-    print(data_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
     
     print(f"Processing with {'text content' if include_text else 'text length only'}")

@@ -7,9 +7,9 @@ from tqdm import tqdm
 
 DATA_DIR = Path("data")
 
-def download_page_w_revisions(page_title: str) -> str:
+def download_page_w_revisions(page_title: str, lang:str) -> str:
     """Downloads complete revision history of a page using Special:Export with progress bar."""
-    url = f"https://en.wikipedia.org/wiki/Special:Export/{page_title}"
+    url = f"https://{lang}.wikipedia.org/wiki/Special:Export/{page_title}"
     params = {
         "history": "",  # Empty parameter to get full history
         "action": "submit"
@@ -118,7 +118,7 @@ def format_revision_counts(page_name: str, counts: dict) -> str:
     
     return "\n".join(output)
 
-def main(page: str, data_dir: Path, count_only: bool = False):
+def main(page: str, data_dir: Path, lang:str, count_only: bool = False):
     """
     Downloads all revisions of the given page title and organizes them by date.
     If count_only is True, just prints the count of stored revisions.
@@ -129,7 +129,7 @@ def main(page: str, data_dir: Path, count_only: bool = False):
         return
 
     print(f"Downloading complete history of {page}")
-    raw_revisions = download_page_w_revisions(page)
+    raw_revisions = download_page_w_revisions(page, lang=lang)
     
     # Count total revisions for progress bar
     total_revisions = len(BeautifulSoup(raw_revisions, "lxml-xml").find_all("revision"))
@@ -208,5 +208,15 @@ if __name__ == "__main__":
         default=DATA_DIR,
         help="Directory to store the revision data",
     )
+
+    parser.add_argument(
+        '--lang',
+        type=str,
+        default='en',
+        help='Domain/country code to get pages in different languages.'
+    )
     args = parser.parse_args()
-    main(page=args.page, data_dir=args.data_dir, count_only=args.count_only)
+    main(page=args.page, 
+         data_dir=args.data_dir, 
+         count_only=args.count_only, 
+         lang=args.lang)
