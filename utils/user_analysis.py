@@ -59,3 +59,36 @@ def find_edits(text1, text2):
 
         return diff_gen
 
+def detect_overediting(df:pd.DataFrame, timeframe:int):
+    '''
+    Show users that edit same paragraph within timeframe
+    takes:
+        revisions df 
+        timeframe in hours
+    Returns: 
+        df qith quick overediting (bool, below combined), 
+            quick edits (bool, withtin timeframe) and 
+            overditing (bool, same paragraph as previous ins) 
+    ''' 
+    timedelta = (df['timestamp'].diff().dt.total_seconds()/3600).shift(-1).abs() # get total hours since last edit
+    df['quick_edits'] = timedelta < timeframe # extract text they have edited, check if that is still in next version
+    # in other version the insertion from previous one should not be a deletion in current row 
+    df['shifted_ins'] = df['insertions'].shift(-1)
+    overedited = df[:-1].apply(lambda x: detect_overlap(x['deletions'], x['shifted_ins']), axis=1)
+    overedited[len(df)-1] = False # first one cannot overedit by default 
+    df['overedited'] = overedited
+    print(df['overedited'])
+    df['quick_overediting'] = df['quick_edits'] & df['overedited']
+
+    return df
+
+def detect_overlap(list1, list2):
+    '''
+    list1: deletions
+    list2: ins
+    '''
+    for el in list1: 
+        if el in list2: 
+            return True
+    return False
+    
