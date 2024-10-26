@@ -43,11 +43,10 @@ def get_edits(differences_generator):
     for d in differences_generator:
         
         if d.startswith('-'): 
-            deletion.append(d)
+            deletion.append(d[2:]) # clean beginning
         elif d.startswith('+'): 
-            insertion.append(d)
+            insertion.append(d[2:])
     return deletion, insertion
-
 
 def find_edits(text1, text2):
     if text2 is None: 
@@ -59,7 +58,8 @@ def find_edits(text1, text2):
 
         return diff_gen
 
-def detect_overediting(df:pd.DataFrame, timeframe:int):
+
+def detect_overediting(df:pd.DataFrame, timeframe:int, exclude_own_edits=True):
     '''
     Show users that edit same paragraph within timeframe
     takes:
@@ -77,8 +77,12 @@ def detect_overediting(df:pd.DataFrame, timeframe:int):
     overedited = df[:-1].apply(lambda x: detect_overlap(x['deletions'], x['shifted_ins']), axis=1)
     overedited[len(df)-1] = False # first one cannot overedit by default 
     df['overedited'] = overedited
-    print(df['overedited'])
-    df['quick_overediting'] = df['quick_edits'] & df['overedited']
+    if exclude_own_edits: 
+        own_edit = df['userid'] == df['userid'].shift(-1)
+        df['quick_overediting'] = df['quick_edits'] & df['overedited'] & ~own_edit
+    else: 
+        df['quick_overediting'] = df['quick_edits'] & df['overedited']
+
 
     return df
 
