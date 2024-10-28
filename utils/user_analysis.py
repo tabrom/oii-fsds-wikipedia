@@ -95,4 +95,8 @@ def detect_overlap(list1, list2):
         if el in list2: 
             return True
     return False
+
+
+def get_time_diff(timestamp):
+  return (timestamp.diff().dt.total_seconds()/3600).shift(-1).abs()
     
