@@ -70,7 +70,7 @@ def detect_overediting(df:pd.DataFrame, timeframe:int, exclude_own_edits=True):
             quick edits (bool, withtin timeframe) and 
             overditing (bool, same paragraph as previous ins) 
     ''' 
-    timedelta = (df['timestamp'].diff().dt.total_seconds()/3600).shift(-1).abs() # get total hours since last edit
+    timedelta = get_time_diff(df['timestamp']) # get total hours since last edit
     df['quick_edits'] = timedelta < timeframe # extract text they have edited, check if that is still in next version
     # in other version the insertion from previous one should not be a deletion in current row 
     df['shifted_ins'] = df['insertions'].shift(-1)
