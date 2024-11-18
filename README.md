@@ -1,4 +1,12 @@
 # oii-fsds-wikipedia
+
+This repo was used by Tabio (tabrom) to work on the labs and walkthroughs. 
+
+Now it has become the central point to hand in our code bases in a unified version. As a deep colab on some utils would have added considerable overhead due to the large provided base, we chose to not work together in this way and update each other instead. 
+
+It can be found [here](https://drive.google.com/drive/u/0/folders/1XgM9FonSGPp1u9Bcf_nVwRgNE_IE5Ob_). Relevant notebooks can be found there.. Note that user analysis (by Tabio) uses this repo as well. 
+
+**OG README:**
 A repository for downloading and analyzing Wikipedia revisions. Used in Fundamentals of Social Data Science for the MSc Social Data Science at the Oxford Internet Institute.
 
 ## Installation
